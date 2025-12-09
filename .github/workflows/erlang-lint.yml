@@ -1,0 +1,67 @@
+name: Erlang Lint (Smart)
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  # Job 1: 生成并缓存 PLT
+  plt:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache-plts.outputs.cache-hit }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Erlang/OTP and rebar3
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: '26'
+        rebar3-version: '3.25.1'
+
+    - name: Cache PLT
+      id: cache-plts
+      uses: actions/cache@v3
+      with:
+        path: _build/default/.dialyzer_plt
+        key: ${{ runner.os }}-dialyzer-plt-${{ hashFiles('rebar.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-dialyzer-plt-
+
+    - name: Build PLT if cache missed
+      if: steps.cache-plts.outputs.cache-hit != 'true'
+      run: rebar3 dialyzer --plt
+
+  # Job 2: 静态分析和未用函数检查
+  lint:
+    needs: plt
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Erlang/OTP and rebar3
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: '26'
+        rebar3-version: '3.25.1'
+
+    - name: Restore PLT cache
+      uses: actions/cache@v3
+      with:
+        path: _build/default/.dialyzer_plt
+        key: ${{ runner.os }}-dialyzer-plt-${{ hashFiles('rebar.lock') }}
+
+    - name: Check code formatting
+      run: rebar3 fmt --check-formatted
+
+    - name: Run dialyzer (static analysis)
+      run: rebar3 dialyzer
+
+    - name: Check for unused functions/modules
+      run: rebar3 xref unused
