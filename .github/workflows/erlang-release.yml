@@ -1,0 +1,23 @@
+name: Erlang Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # 只有推送版本tag时才触发发布
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Erlang/OTP and rebar3
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: '26.2'
+        rebar3-version: '3.22.0'
+
+    - name: Build release package
+      run: rebar3 release
