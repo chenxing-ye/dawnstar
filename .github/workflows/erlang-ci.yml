@@ -1,0 +1,36 @@
+name: Erlang CI
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Erlang/OTP
+      uses: erlef/setup-beam@v1
+      with:
+        otp-version: '26.2'
+        rebar3-version: '3.22.0'
+
+    - name: Cache rebar3 deps
+      uses: actions/cache@v3
+      with:
+        path: _build
+        key: ${{ runner.os }}-rebar3-${{ hashFiles('rebar.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-rebar3-
+
+    - name: Compile
+      run: rebar3 compile
+
+    - name: Run tests
+      run: rebar3 do eunit, ct
+
