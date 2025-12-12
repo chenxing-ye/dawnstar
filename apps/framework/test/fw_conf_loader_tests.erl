@@ -4,20 +4,6 @@
 -module(fw_conf_loader_tests).
 -include_lib("eunit/include/eunit.hrl").
 
-%% 测试套件设置
-%% 兼容旧的测试方式的setup函数（保留但不使用）
-% setup() ->
-%     % 创建一个临时测试配置文件
-%     TestConfig = "test_config.erl",
-%     ConfigContent = "[{framework, [{key1, value1}, {key2, value2}]}].",
-%     file:write_file(TestConfig, ConfigContent),
-%     TestConfig.
-
-% % 兼容旧的测试方式的teardown函数（保留但不使用）
-% teardown(TestConfig) ->
-%     % 删除临时测试配置文件
-%     file:delete(TestConfig).
-
 %% 测试套件 - 为每个测试用例创建独立的测试环境
 fw_conf_loader_test_() ->
     [
