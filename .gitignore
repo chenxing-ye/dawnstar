@@ -45,3 +45,6 @@ Thumbs.db
 
 # Exclude test configuration files (if needed)
 # config/test/
+
+# Documentation files moved to md folder
+md/
