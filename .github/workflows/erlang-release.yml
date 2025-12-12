@@ -8,10 +8,14 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整的git历史，用于生成changelog
 
     - name: Setup Erlang/OTP and rebar3
       uses: erlef/setup-beam@v1
@@ -19,5 +23,22 @@ jobs:
         otp-version: '26.2'
         rebar3-version: '3.22.0'
 
+    - name: Generate changelog
+      uses: orhun/git-cliff-action@v4
+      id: git-cliff
+      with:
+        config: .github/.git-cliff.toml
+        args: -vv --latest --strip header
+      env:
+        OUTPUT: CHANGES.md
+        GITHUB_REPO: ${{ github.repository }}
+
     - name: Build release package
       run: rebar3 release
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        body: ${{ steps.git-cliff.outputs.content }}
+        draft: false
+        prerelease: false
