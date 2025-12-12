@@ -11,10 +11,37 @@ _vendor
 .erlang.cookie
 ebin
 log
+logs
 erl_crash.dump
 .rebar
-logs
+rebar3.crashdump
+
+# IDE files
 .idea
 *.iml
-rebar3.crashdump
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Backup files
 *~
+*.bak
+*.backup
+
+# Temporary files
+/tmp
+/temp
+
+# Exclude test configuration files (if needed)
+# config/test/

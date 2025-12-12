@@ -1,12 +1,11 @@
-{application, dawnstar, [
+{application, framework, [
     {description, "An OTP application"},
     {vsn, "0.1.0"},
     {registered, []},
-    {mod, {dawnstar_app, []}},
+    {mod, {framework_app, []}},
     {applications, [
         kernel,
-        stdlib,
-        framework
+        stdlib
     ]},
     {env, []},
     {modules, []},
