@@ -35,12 +35,12 @@ teardown() ->
 %% 测试套件 - 为每个测试用例创建独立的测试环境
 fw_conf_test_() ->
     [
-     {"get_test", ?_test(get_test_impl())},
-     {"get_with_default_test", ?_test(get_with_default_test_impl())},
-     {"set_test", ?_test(set_test_impl())},
-     {"reload_test", ?_test(reload_test_impl())},
-     {"list_all_test", ?_test(list_all_test_impl())},
-     {"config_info_test", ?_test(config_info_test_impl())}
+        {"get_test", ?_test(get_test_impl())},
+        {"get_with_default_test", ?_test(get_with_default_test_impl())},
+        {"set_test", ?_test(set_test_impl())},
+        {"reload_test", ?_test(reload_test_impl())},
+        {"list_all_test", ?_test(list_all_test_impl())},
+        {"config_info_test", ?_test(config_info_test_impl())}
     ].
 
 %% 每个测试用例的独立实现

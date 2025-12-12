@@ -7,10 +7,10 @@
 %% 测试套件 - 为每个测试用例创建独立的测试环境
 fw_conf_loader_test_() ->
     [
-     {"load_file_test", ?_test(load_file_test_impl())},
-     {"load_files_test", ?_test(load_files_test_impl())},
-     {"merge_configs_test", ?_test(merge_configs_test_impl())},
-     {"get_config_path_test", ?_test(get_config_path_test_impl())}
+        {"load_file_test", ?_test(load_file_test_impl())},
+        {"load_files_test", ?_test(load_files_test_impl())},
+        {"merge_configs_test", ?_test(merge_configs_test_impl())},
+        {"get_config_path_test", ?_test(get_config_path_test_impl())}
     ].
 
 %% 测试 load_file/1 函数
@@ -19,7 +19,7 @@ load_file_test_impl() ->
     TestConfig = "test_config.erl",
     ConfigContent = "[{framework, [{key1, value1}, {key2, value2}]}].",
     file:write_file(TestConfig, ConfigContent),
-    
+
     try
         % 测试加载有效配置文件
         {ok, Config} = fw_conf_loader:load_file(TestConfig),
@@ -36,13 +36,13 @@ load_files_test_impl() ->
     % 创建两个临时测试配置文件
     TestConfig1 = "test_config1.erl",
     TestConfig2 = "test_config2.erl",
-    
+
     ConfigContent1 = "[{framework, [{key1, value1}, {key2, value2}]}].",
     ConfigContent2 = "[{framework, [{key2, updated_value}, {key3, value3}]}].",
-    
+
     file:write_file(TestConfig1, ConfigContent1),
     file:write_file(TestConfig2, ConfigContent2),
-    
+
     try
         % 测试加载多个配置文件
         {ok, MergedConfig} = fw_conf_loader:load_files([TestConfig1, TestConfig2]),
@@ -56,7 +56,9 @@ load_files_test_impl() ->
         {ok, EmptyConfig} = fw_conf_loader:load_files([]),
         ?assertEqual([], EmptyConfig),
         % 测试加载包含不存在文件的列表
-        ?assertMatch({error, _}, fw_conf_loader:load_files([TestConfig1, "non_existent_config.erl"]))
+        ?assertMatch(
+            {error, _}, fw_conf_loader:load_files([TestConfig1, "non_existent_config.erl"])
+        )
     after
         % 清理临时测试配置文件
         file:delete(TestConfig1),
@@ -75,13 +77,15 @@ merge_configs_test_impl() ->
     ?assert(lists:member({key1, value1}, AppConfig)),
     ?assert(lists:member({key2, updated_value}, AppConfig)),
     ?assert(lists:member({key3, value3}, AppConfig)),
-    
+
     % 测试合并包含映射的配置
     MapConfig1 = [{app1, #{key1 => value1, key2 => value2}}],
     MapConfig2 = [{app1, #{key2 => updated_value, key3 => value3}}],
     MergedMapConfig = fw_conf_loader:merge_configs(MapConfig1, MapConfig2),
-    ?assertEqual([{app1, #{key1 => value1, key2 => updated_value, key3 => value3}}], MergedMapConfig),
-    
+    ?assertEqual(
+        [{app1, #{key1 => value1, key2 => updated_value, key3 => value3}}], MergedMapConfig
+    ),
+
     % 测试合并空配置
     EmptyConfig1 = [],
     EmptyConfig2 = [{app1, [{key1, value1}]}],
