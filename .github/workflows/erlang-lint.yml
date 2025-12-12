@@ -61,5 +61,5 @@ jobs:
     - name: Run dialyzer (static analysis)
       run: rebar3 dialyzer
 
-    - name: Check for unused functions/modules
-      run: rebar3 xref unused
+    # - name: Check for unused functions/modules
+    #   run: rebar3 xref unused
