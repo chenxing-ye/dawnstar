@@ -5,7 +5,8 @@
     {mod, {framework_app, []}},
     {applications, [
         kernel,
-        stdlib
+        stdlib,
+        dynamic_compile
     ]},
     {env, []},
     {modules, []},

@@ -5,6 +5,8 @@
 %%% -------------------------------------------------------------------
 -module(fw_conf).
 
+-dialyzer({nowarn_function, [list_all/0, config_info/1]}).
+
 -export([
     start/0,
     get/1,
